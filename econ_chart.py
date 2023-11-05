@@ -18,13 +18,13 @@ rainbow_colors = ['#ff0000', '#ff7f00', '#ffff00', '#00ff00', '#4b0082', '#8f00f
 
 # Chart names here. Chart sequence follows as the name sequence here. 
 # TODO: there are 21 items, but only 20 spots on the plot layout. See if it can be shrink to 20. 
-
 names = ['Job and Payroll',   'World Index',   'Sector',       'SP500 Breadth',  'NASDAQ100 Speculation',
          'SP500 Speculation', 'CBOE Put/Call', 'NAAIM',        'AAII Sentiment', 'C_Spread, VIX, SP500', 
          'US Rate',           'Inflation',     'Oil/Gold CPI', 'Cu/Gold PPI',    'WEI, GDP',
          'PMI, Durable Goods','Housing Supply','Retail',       'Vehicle Sales',  'Housing Market', 
          'Personal Finance',
         ]
+
 # names to functions lookup dictionary
 name_func_dct = {'Job and Payroll': get_job_payroll_dat}
 
