@@ -57,7 +57,9 @@ def read_eoddata_csv(symbol):
     files = glob.glob(f"{symbol.upper()}_*")
     d_lst=[]
     for f in files:
-        d_lst.append(pd.read_csv(f, usecols=list(range(1,7)), names=['Date', 'Open', 'High', 'Low', 'Close', 'Volume']))
+        d_lst.append(pd.read_csv(f, usecols=list(range(1,7)), 
+                                 names=['Date', 'Open', 'High', 
+                                        'Low', 'Close', 'Volume']))
     a_df = pd.concat(d_lst)
     a_df.Date = pd.to_datetime(a_df.Date)
     a_df = a_df.drop_duplicates()
