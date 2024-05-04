@@ -67,6 +67,9 @@ def read_eoddata_total_stock_above_avg():
     """Read Close from total stock above average csv files."""
     symbols = {50:'MMFI', 100:'MMOH', 200:'MMTH'}
     df_dct = {}
+
     for idx, s in symbols.items():
-        df_dct[idx] = read_eoddata_csv(s)[['Date', 'Close']]
+        df_dct[idx] = read_eoddata_csv(s)
+        for p in [5, 10, 20]:
+            df_dct[idx][f'sma_{p}'] = df_dct[idx]['Close'].rolling(window=p).mean()
     return df_dct

@@ -11,9 +11,14 @@ import numpy as np
 from econ import *
 
 
-symbol = 'AMAT'
+symbol = '^GSPC'
 periods = [20, 60, 120, 240]
 rainbow_colors = px.colors.cyclical.mygbm
+reds = px.colors.sequential.Reds[3:]
+greens = px.colors.sequential.Greens[3:]
+bupu = px.colors.sequential.BuPu[3:]
+breadth_colors = {50: reds, 100: greens, 200: bupu}
+
 
 
 def get_ticker_data(symbol, *, rd_csv=False):
@@ -53,21 +58,12 @@ for p in [5, 10, 20, 60, 120]:
     melt_cols.append(f'sma_{p}')
 df_melt = df_close.melt(id_vars=['Date'], value_vars=melt_cols)
 
-breadth = get_sp_above_avg()
+breadth = read_eoddata_total_stock_above_avg()
+breadth1 = {}
+for key, df in breadth.items():
+    # melt_breadth = breadth[['Date', 'Close', 'sma_5', 'sma_10', 'sma_20']].melt(id_vars=['Date'], value_vars=['Close', 'sma_5', 'sma_10', 'sma_20'])
+    breadth1[key] = df[['Date', 'Close', 'sma_5', 'sma_10', 'sma_20']]
 
-breadth1 = breadth.join(df_close.set_index('Date'), how='outer', on=breadth.index)[['key_0','50','100', '200']]
-breadth1 = breadth1.rename(columns={'key_0':'time'})
-breadth1['time'] = pd.to_datetime(breadth1['time'])
-breadth1.sort_values(by='time', inplace=True)
-breadth1.fillna(method="bfill", inplace=True)
-
-for p in [5]:
-    for c in breadth1.columns[1:]:
-        df = breadth1[['time',c]]
-        #TODO breadth is highly fragmented. fill the missing date with previous value
-        
-        breadth1[f'{c}_sma_{p}'] = df[c].rolling(window=p).mean()
-breadth1.set_index('time', inplace=True)
 
 app = Dash(__name__)
 
@@ -97,8 +93,9 @@ def customize_width(left_width):
         fig.add_trace(go.Scatter(x=df_close['Date'], y=df_close[column], name=column, line=dict(color=rainbow_colors[i*c_step])), row=1, col=1)
 
     # Plot breadth data
-    for i, column in enumerate(breadth1.columns):
-        fig.add_trace(go.Scatter(x=breadth1.index, y=breadth1[column], name=column, line=dict(color=rainbow_colors[i])), row=2, col=1)
+    for idx, df in breadth1.items():
+        for i, column in enumerate(df.columns[1:]):
+            fig.add_trace(go.Scatter(x=df['Date'], y=df[column], name=f"above{idx}_"+column, line=dict(color=breadth_colors[idx][i])), row=2, col=1)
 
     return fig
 
