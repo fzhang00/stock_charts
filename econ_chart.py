@@ -2,7 +2,6 @@
 _API = "a839f239d3e2ff7581a77d72aed58821"
 
 import pandas as pd
-import pandas_ta as ta
 
 from math import floor
 import numpy as np
