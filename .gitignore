@@ -1,4 +1,5 @@
-/amat.csv
+*.csv
+*.html
 /chart.py
 /tsm.csv
 /__pycache__
